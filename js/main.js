@@ -16,12 +16,13 @@ function getServerData(url) {
         err => console.error(err)
     )
 }
+
 function startGetUsers() {
     getServerData("http://localhost:3000/users").then(
         data => fillDataTable(data, "usersTable")
     );
 }
-document.querySelector("#getDataBtn").addEventListener("click", startGetUsers);
+startGetUsers();
 
 //Fill table with users
 
@@ -46,11 +47,10 @@ function fillDataTable(data, tableID) {
             let input = createAnyElement("input", {
                 class: "input",
                 value: row[k],
-                name: k
+                name: k,
+                readOnly: true,
+                placeholder: "New data..."
             });
-                if (k == "id") {
-                input.setAttribute("readonly", true);
-            } 
             tr.appendChild(td);
             td.appendChild(input);
          }   
@@ -59,6 +59,9 @@ function fillDataTable(data, tableID) {
         tBody.appendChild(tr);
     }
 }
+
+
+
 
 function createAnyElement(name, attributes) {
     let element = document.createElement(name);
@@ -71,13 +74,19 @@ function createAnyElement(name, attributes) {
 function createBtnGroup() {
 
     let group = createAnyElement("div", { class: "btn-group" });
-    let infoBtn = createAnyElement("button", { class: "btn-info", onclick: "setUser(this)" });
-    infoBtn.innerHTML = `<i class="fa fa-refresh" aria-hidden="true"></i>`;
-    let deleteBtn = createAnyElement("button", { class: "btn-del", onclick: "delUser(this)" });
+    let infoBtn = createAnyElement("button", { class: "btn-edit", onclick: "editUser(this)"});
+    infoBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
+    let deleteBtn = createAnyElement("button", { class: "btn-del", onclick: "delUser(this)"});
     deleteBtn.innerHTML = `<i class="fa fa-trash-o" aria-hidden="true"></i>`;
+    let saveBtn = createAnyElement("button", { class: "btn-save", onclick: "saveUser(this)", style: "display: none"});
+    saveBtn.innerHTML = `<i class="fa fa-save" aria-hidden="true"></i>`;
+    let undoBtn = createAnyElement("button", { class: "btn-undo", onclick: "undoUser(this)", style: "display: none"});
+    undoBtn.innerHTML = `<i class="fa fa-undo" aria-hidden="true"></i>`;
 
     group.appendChild(infoBtn)
     group.appendChild(deleteBtn)
+    group.appendChild(saveBtn)
+    group.appendChild(undoBtn)
 
     let td = createAnyElement("td");
     td.appendChild(group);
@@ -85,6 +94,54 @@ function createBtnGroup() {
 }
 
 //Button functions
+
+//Edit user
+
+
+function editUser(btn) {
+    let tr = btn.parentElement.parentElement.parentElement;
+    console.log(tr.children);
+    Array.from(tr.children).forEach(td => td.children[0].readOnly = false);
+    const name = tr.children[1].children[0].value
+    const email = tr.children[2].children[0].value
+    const address = tr.children[3].children[0].value
+
+    btn.style.display = "none";
+    btn.parentElement.children[1].style.display = "none";
+    btn.parentElement.children[2].style.display = "inline-block";
+    btn.parentElement.children[3].style.display = "inline-block";
+}
+
+function saveUser(btn) {
+    let tr = btn.parentElement.parentElement.parentElement;
+    console.log(tr.children);
+    Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
+    const name = tr.children[1].children[0].value
+    const email = tr.children[2].children[0].value
+    const address = tr.children[3].children[0].value
+
+    btn.style.display = "none";
+    btn.parentElement.children[3].style.display = "none";
+    btn.parentElement.children[0].style.display = "inline-block";
+    btn.parentElement.children[1].style.display = "inline-block";
+}
+
+function undoUser(btn) {
+    let tr = btn.parentElement.parentElement.parentElement;
+    console.log(tr.children);
+    Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
+    const name = tr.children[1].children[0].value
+    const email = tr.children[2].children[0].value
+    const address = tr.children[3].children[0].value
+
+    btn.style.display = "none";
+    btn.parentElement.children[2].style.display = "none";
+    btn.parentElement.children[0].style.display = "inline-block";
+    btn.parentElement.children[1].style.display = "inline-block";
+}
+
+
+
 
 //Delete user
 
@@ -107,7 +164,6 @@ function delUser(btn) {
     );
 
 }
-
 
 
 // New User function
