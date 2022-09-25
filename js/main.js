@@ -143,6 +143,7 @@ function editUser(btn) {
     btn.parentElement.children[3].style.display = "inline-block";
 };
 
+//Save user
 
 function saveUser(btn) {
     let tr = btn.parentElement.parentElement.parentElement;
@@ -157,9 +158,27 @@ function saveUser(btn) {
     btn.parentElement.children[1].style.display = "inline-block";
 
 
-    startGetUsers();
+    let data = getRowData(tr);
+    let id = tr.children[0].children[0].value;
+    let fetchOptions = {
+        method: "PUT",
+        mode: "cors",
+        cache: "no-cache",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    };
 
-}
+    fetch(`http://localhost:3000/users/${id}`, fetchOptions).then(
+        resp => resp.json(),
+        err => console.error(err)
+    ).then(
+        data => startGetUsers()
+    );
+};
+
+//Undo user
 
 function undoUser(btn) {
     let tr = btn.parentElement.parentElement.parentElement;
@@ -176,8 +195,6 @@ function undoUser(btn) {
     startGetUsers();
 
 }
-
-
 
 
 //Delete user
@@ -203,7 +220,7 @@ function delUser(btn) {
 }
 
 
-// New User function
+// New User
 
 function addUserRow(row) {
     let tr = createAnyElement("tr");
@@ -260,26 +277,3 @@ function getRowData(tr) {
     return data;
 }
 
-// Set user
-
-function setUser(btn) {
-    let tr = btn.parentElement.parentElement.parentElement;
-    let data = getRowData(tr);
-    let id = tr.children[0].children[0].value;
-    let fetchOptions = {
-        method: "PUT",
-        mode: "cors",
-        cache: "no-cache",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    };
-
-    fetch(`http://localhost:3000/users/${id}`, fetchOptions).then(
-        resp => resp.json(),
-        err => console.error(err)
-    ).then(
-        data => startGetUsers()
-    );
-};
