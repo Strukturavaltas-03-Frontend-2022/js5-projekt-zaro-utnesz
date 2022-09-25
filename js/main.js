@@ -30,7 +30,7 @@ const validator = (name, email, address, isValid) => {
         console.log("Address is not valid!");
     } else {
         isValid = false;
-        console.log("Are your stupid or what?");
+        console.log("Please add valid data!");
     }
 
     return isValid;
@@ -131,8 +131,7 @@ function createBtnGroup() {
 
 function editUser(btn) {
     let tr = btn.parentElement.parentElement.parentElement;
-    console.log(tr.children);
-    Array.from(tr.children).forEach(td => td.children[0].readOnly = false);
+    Array.from(tr.children).forEach(td => td.children[0].readOnly = false)
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
     const address = tr.children[3].children[0].value
@@ -141,6 +140,7 @@ function editUser(btn) {
     btn.parentElement.children[1].style.display = "none";
     btn.parentElement.children[2].style.display = "inline-block";
     btn.parentElement.children[3].style.display = "inline-block";
+
 };
 
 //Save user
@@ -176,13 +176,39 @@ function saveUser(btn) {
     ).then(
         data => startGetUsers()
     );
+
+        const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+        const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
+
+        const nameMatch = name.match(isValidName);
+        const emailMatch = email.match(isValidEmail);
+        const addressMatch = address.match(isVAlidAddress);
+
+        if (nameMatch && emailMatch && addressMatch) {
+            alert("ok")
+        } else if (!nameMatch && emailMatch && addressMatch) {
+
+            alert("Name is not valid!");
+        } else if (nameMatch && !emailMatch && addressMatch) {
+   
+            alert("Email is not valid!");
+        } else if (nameMatch && emailMatch && !addressMatch) {
+  
+            alert("Address is not valid!");
+        } else {
+
+            alert("Please add valid data!");
+        }
+
+  
+
 };
 
 //Undo user
 
 function undoUser(btn) {
     let tr = btn.parentElement.parentElement.parentElement;
-    console.log(tr.children);
     Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
@@ -193,6 +219,7 @@ function undoUser(btn) {
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
     startGetUsers();
+;
 
 }
 
@@ -216,6 +243,8 @@ function delUser(btn) {
             startGetUsers();
         }
     );
+
+    alert("User deleted!");
 
 }
 
@@ -266,6 +295,36 @@ function createUser(btn) {
     ).then(
         data => startGetUsers()
     );
+
+  
+    Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
+    const name = tr.children[1].children[0].value
+    const email = tr.children[2].children[0].value
+    const address = tr.children[3].children[0].value
+
+    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+    const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
+
+    const nameMatch = name.match(isValidName);
+    const emailMatch = email.match(isValidEmail);
+    const addressMatch = address.match(isVAlidAddress);
+
+    if (nameMatch && emailMatch && addressMatch) {
+        alert("ok")
+    } else if (!nameMatch && emailMatch && addressMatch) {
+
+        alert("Name is not valid!");
+    } else if (nameMatch && !emailMatch && addressMatch) {
+
+        alert("Email is not valid!");
+    } else if (nameMatch && emailMatch && !addressMatch) {
+
+        alert("Address is not valid!");
+    } else {
+
+        alert("Please add valid data!");
+    }
 }
 
 function getRowData(tr) {

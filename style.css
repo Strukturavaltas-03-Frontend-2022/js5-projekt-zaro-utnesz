@@ -5,7 +5,7 @@
 }
 
 body {
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(90deg, rgb(2, 2, 2) 0%, rgb(126, 126, 126) 35%, rgb(254, 255, 255) 100%);
     color: #ffffff
 }
 
@@ -32,7 +32,7 @@ header {
 }
 
 th {
-    padding: 10px 0 10px 0;
+    padding: 10px 3px 10px 3px;
     
 }
 
@@ -50,6 +50,6 @@ input {
     font-family: 'Roboto';
     font-weight: bold;
     font-size: 1rem;
-    pad: 3px;
+    padding: 3px;
     box-sizing: border-box;
 }

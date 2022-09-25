@@ -15,6 +15,7 @@ const addressMatch = address.match(isVAlidAddress);
 
 if (nameMatch && emailMatch && addressMatch) {
     isValid = true;
+    console.log("Data is valid!");
 } else if (!nameMatch && emailMatch && addressMatch) {
     isValid = false;
     console.log("Name is not valid!");
