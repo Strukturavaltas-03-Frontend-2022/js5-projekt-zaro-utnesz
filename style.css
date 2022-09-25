@@ -5,12 +5,13 @@
 }
 
 body {
-    background-color: #808080;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    color: #ffffff
 }
 
 header {
     background-color: #000000;
-    color: #808080;
+    color: #ffffff;
     height: 5%;
     padding: 20px;
     font-size: 2rem;
@@ -18,4 +19,36 @@ header {
     justify-content: center;
     font-family: 'Roboto';
     font-weight: bold;
+}
+
+.container {
+    position: relative;
+    justify-content: center;
+    display: flex;
+    padding: 20px;
+    margin: 20px;
+    font-family: 'Roboto';
+    text-align: left;
+}
+
+th {
+    padding: 10px 0 10px 0;
+    
+}
+
+td {
+    padding: 3px;
+    font-family: 'Roboto';
+}
+
+button {
+    font-size: 1rem;
+}
+
+input {
+    font-family: 'Roboto';
+    font-weight: bold;
+    font-size: 1rem;
+    pad: 3px;
+    box-sizing: border-box;
 }

@@ -1,6 +1,40 @@
-//Keys of users
+'use strict'
 
 let keys = ["id", "name", "email", "address"];
+
+//Validation
+
+const validator = (name, email, address, isValid) => {
+    isValid = false;
+
+
+    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+    const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
+
+
+    const nameMatch = name.match(isValidName);
+    const emailMatch = email.match(isValidEmail);
+    const addressMatch = address.match(isVAlidAddress);
+
+    if (nameMatch && emailMatch && addressMatch) {
+        isValid = true;
+    } else if (!nameMatch && emailMatch && addressMatch) {
+        isValid = false;
+        console.log("Name is not valid!");
+    } else if (nameMatch && !emailMatch && addressMatch) {
+        isValid = false;
+        console.log("Email is not valid!");
+    } else if (nameMatch && emailMatch && !addressMatch) {
+        isValid = false;
+        console.log("Address is not valid!");
+    } else {
+        isValid = false;
+        console.log("Are your stupid or what?");
+    }
+
+    return isValid;
+}
 
 // GET method
 
@@ -22,6 +56,7 @@ function startGetUsers() {
         data => fillDataTable(data, "usersTable")
     );
 }
+
 startGetUsers();
 
 //Fill table with users
@@ -49,7 +84,6 @@ function fillDataTable(data, tableID) {
                 value: row[k],
                 name: k,
                 readOnly: true,
-                placeholder: "New data..."
             });
             tr.appendChild(td);
             td.appendChild(input);
@@ -59,9 +93,6 @@ function fillDataTable(data, tableID) {
         tBody.appendChild(tr);
     }
 }
-
-
-
 
 function createAnyElement(name, attributes) {
     let element = document.createElement(name);
@@ -91,7 +122,7 @@ function createBtnGroup() {
     let td = createAnyElement("td");
     td.appendChild(group);
     return td;
-}
+};
 
 //Button functions
 
@@ -110,11 +141,11 @@ function editUser(btn) {
     btn.parentElement.children[1].style.display = "none";
     btn.parentElement.children[2].style.display = "inline-block";
     btn.parentElement.children[3].style.display = "inline-block";
-}
+};
+
 
 function saveUser(btn) {
     let tr = btn.parentElement.parentElement.parentElement;
-    console.log(tr.children);
     Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
@@ -124,6 +155,10 @@ function saveUser(btn) {
     btn.parentElement.children[3].style.display = "none";
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
+
+
+    startGetUsers();
+
 }
 
 function undoUser(btn) {
@@ -138,6 +173,8 @@ function undoUser(btn) {
     btn.parentElement.children[2].style.display = "none";
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
+    startGetUsers();
+
 }
 
 
@@ -174,7 +211,8 @@ function addUserRow(row) {
         let td = createAnyElement("td");
         let input = createAnyElement("input", {
             class: "input",
-            name: k
+            name: k,
+            placeholder: "New data..."
         });
         td.appendChild(input);
         tr.appendChild(td);
