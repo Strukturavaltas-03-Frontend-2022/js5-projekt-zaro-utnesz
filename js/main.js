@@ -2,39 +2,7 @@
 
 let keys = ["id", "name", "email", "address"];
 
-//Validation
 
-const validator = (name, email, address, isValid) => {
-    isValid = false;
-
-
-    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
-    const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
-
-
-    const nameMatch = name.match(isValidName);
-    const emailMatch = email.match(isValidEmail);
-    const addressMatch = address.match(isVAlidAddress);
-
-    if (nameMatch && emailMatch && addressMatch) {
-        isValid = true;
-    } else if (!nameMatch && emailMatch && addressMatch) {
-        isValid = false;
-        console.log("Name is not valid!");
-    } else if (nameMatch && !emailMatch && addressMatch) {
-        isValid = false;
-        console.log("Email is not valid!");
-    } else if (nameMatch && emailMatch && !addressMatch) {
-        isValid = false;
-        console.log("Address is not valid!");
-    } else {
-        isValid = false;
-        console.log("Please add valid data!");
-    }
-
-    return isValid;
-}
 
 // GET method
 
@@ -68,7 +36,7 @@ function fillDataTable(data, tableID) {
         return;
     }
 
-// Add new user row
+    // Add new user row
 
     let tBody = table.querySelector("tbody");
     tBody.innerHTML = '';
@@ -87,7 +55,7 @@ function fillDataTable(data, tableID) {
             });
             tr.appendChild(td);
             td.appendChild(input);
-         }   
+        }
         let btnGroup = createBtnGroup();
         tr.appendChild(btnGroup);
         tBody.appendChild(tr);
@@ -105,13 +73,13 @@ function createAnyElement(name, attributes) {
 function createBtnGroup() {
 
     let group = createAnyElement("div", { class: "btn-group" });
-    let infoBtn = createAnyElement("button", { class: "btn-edit", onclick: "editUser(this)"});
+    let infoBtn = createAnyElement("button", { class: "btn-edit", onclick: "editUser(this)" });
     infoBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
-    let deleteBtn = createAnyElement("button", { class: "btn-del", onclick: "delUser(this)"});
+    let deleteBtn = createAnyElement("button", { class: "btn-del", onclick: "delUser(this)" });
     deleteBtn.innerHTML = `<i class="fa fa-trash-o" aria-hidden="true"></i>`;
-    let saveBtn = createAnyElement("button", { class: "btn-save", onclick: "saveUser(this)", style: "display: none"});
+    let saveBtn = createAnyElement("button", { class: "btn-save", onclick: "saveUser(this)", style: "display: none" });
     saveBtn.innerHTML = `<i class="fa fa-save" aria-hidden="true"></i>`;
-    let undoBtn = createAnyElement("button", { class: "btn-undo", onclick: "undoUser(this)", style: "display: none"});
+    let undoBtn = createAnyElement("button", { class: "btn-undo", onclick: "undoUser(this)", style: "display: none" });
     undoBtn.innerHTML = `<i class="fa fa-undo" aria-hidden="true"></i>`;
 
     group.appendChild(infoBtn)
@@ -123,6 +91,7 @@ function createBtnGroup() {
     td.appendChild(group);
     return td;
 };
+
 
 //Button functions
 
@@ -177,31 +146,32 @@ function saveUser(btn) {
         data => startGetUsers()
     );
 
-        const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
-        const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
+    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+    const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
 
-        const nameMatch = name.match(isValidName);
-        const emailMatch = email.match(isValidEmail);
-        const addressMatch = address.match(isVAlidAddress);
+    const nameMatch = name.match(isValidName);
+    const emailMatch = email.match(isValidEmail);
+    const addressMatch = address.match(isVAlidAddress);
 
-        if (nameMatch && emailMatch && addressMatch) {
-            alert("ok")
-        } else if (!nameMatch && emailMatch && addressMatch) {
+    if (nameMatch && emailMatch && addressMatch) {
 
-            alert("Name is not valid!");
-        } else if (nameMatch && !emailMatch && addressMatch) {
-   
-            alert("Email is not valid!");
-        } else if (nameMatch && emailMatch && !addressMatch) {
-  
-            alert("Address is not valid!");
-        } else {
+        alert("ok")
+    } else if (!nameMatch && emailMatch && addressMatch) {
 
-            alert("Please add valid data!");
-        }
+        alert("Name is not valid!");
+    } else if (nameMatch && !emailMatch && addressMatch) {
 
-  
+        alert("Email is not valid!");
+    } else if (nameMatch && emailMatch && !addressMatch) {
+
+        alert("Address is not valid!");
+    } else {
+
+        alert("Please add valid data!");
+    }
+
+
 
 };
 
@@ -219,7 +189,7 @@ function undoUser(btn) {
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
     startGetUsers();
-;
+
 
 }
 
@@ -259,6 +229,7 @@ function addUserRow(row) {
             class: "input",
             name: k,
             placeholder: "New data..."
+
         });
         td.appendChild(input);
         tr.appendChild(td);
@@ -296,7 +267,7 @@ function createUser(btn) {
         data => startGetUsers()
     );
 
-  
+
     Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
