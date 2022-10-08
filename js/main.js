@@ -1,8 +1,11 @@
 'use strict'
 
+const modal = document.getElementById("delModal");
+const btn = document.getElementById("mbutton");
+const span = document.getElementsByClassName("close")[0];
+const btnok = document.getElementsByClassName("button-ok")[0];
+
 let keys = ["id", "name", "email", "address"];
-
-
 
 // GET method
 
@@ -72,14 +75,30 @@ function createAnyElement(name, attributes) {
 
 function createBtnGroup() {
 
-    let group = createAnyElement("div", { class: "btn-group" });
-    let infoBtn = createAnyElement("button", { class: "btn-edit", onclick: "editUser(this)" });
+    let group = createAnyElement("div", {
+        class: "btn-group"
+    });
+    let infoBtn = createAnyElement("button", {
+        class: "btn-edit",
+        onclick: "editUser(this)"
+    });
     infoBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
-    let deleteBtn = createAnyElement("button", { class: "btn-del", onclick: "delUser(this)" });
+    let deleteBtn = createAnyElement("button", {
+        class: "btn-del",
+        onclick: "delUser(this)"
+    });
     deleteBtn.innerHTML = `<i class="fa fa-trash-o" aria-hidden="true"></i>`;
-    let saveBtn = createAnyElement("button", { class: "btn-save", onclick: "saveUser(this)", style: "display: none" });
+    let saveBtn = createAnyElement("button", {
+        class: "btn-save",
+        onclick: "saveUser(this)",
+        style: "display: none"
+    });
     saveBtn.innerHTML = `<i class="fa fa-save" aria-hidden="true"></i>`;
-    let undoBtn = createAnyElement("button", { class: "btn-undo", onclick: "undoUser(this)", style: "display: none" });
+    let undoBtn = createAnyElement("button", {
+        class: "btn-undo",
+        onclick: "undoUser(this)",
+        style: "display: none"
+    });
     undoBtn.innerHTML = `<i class="fa fa-undo" aria-hidden="true"></i>`;
 
     group.appendChild(infoBtn)
@@ -214,7 +233,7 @@ function delUser(btn) {
         }
     );
 
-    alert("User deleted!");
+    delModal();
 
 }
 
@@ -306,4 +325,27 @@ function getRowData(tr) {
     }
     return data;
 }
+
+// Modals
+
+const delModal = () => {
+
+    modal.style.display = "block";
+    setInterval(function () { modal.style.display = "none" }, 5000);
+}
+span.onclick = function () {
+    modal.style.display = "none";
+};
+btnok.onclick = function () {
+    modal.style.display = "none";
+};
+
+window.onclick = function (event) {
+    if (event.target == modal) {
+        (modal.style.display = "none");
+    }
+}
+
+
+
 
