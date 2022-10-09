@@ -65,6 +65,7 @@ function fillDataTable(data, tableID) {
     }
 }
 
+
 function createAnyElement(name, attributes) {
     let element = document.createElement(name);
     for (let k in attributes) {
@@ -78,22 +79,26 @@ function createBtnGroup() {
     let group = createAnyElement("div", {
         class: "btn-group"
     });
+
     let infoBtn = createAnyElement("button", {
         class: "btn-edit",
         onclick: "editUser(this)"
     });
     infoBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
+
     let deleteBtn = createAnyElement("button", {
         class: "btn-del",
         onclick: "delUser(this)"
     });
     deleteBtn.innerHTML = `<i class="fa fa-trash-o" aria-hidden="true"></i>`;
+
     let saveBtn = createAnyElement("button", {
         class: "btn-save",
         onclick: "saveUser(this)",
         style: "display: none"
     });
     saveBtn.innerHTML = `<i class="fa fa-save" aria-hidden="true"></i>`;
+    
     let undoBtn = createAnyElement("button", {
         class: "btn-undo",
         onclick: "undoUser(this)",
@@ -106,16 +111,19 @@ function createBtnGroup() {
     group.appendChild(saveBtn)
     group.appendChild(undoBtn)
 
+
     let td = createAnyElement("td");
     td.appendChild(group);
     return td;
 };
 
 
+
+
 //Button functions
 
 //Edit user
-
+const saveButton = document.getElementsByClassName("btn-edit");
 
 function editUser(btn) {
     let tr = btn.parentElement.parentElement.parentElement;
@@ -128,71 +136,75 @@ function editUser(btn) {
     btn.parentElement.children[1].style.display = "none";
     btn.parentElement.children[2].style.display = "inline-block";
     btn.parentElement.children[3].style.display = "inline-block";
-
 };
 
 //Save user
 
 function saveUser(btn) {
+
     let tr = btn.parentElement.parentElement.parentElement;
     Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
     const address = tr.children[3].children[0].value
-
+   
     btn.style.display = "none";
     btn.parentElement.children[3].style.display = "none";
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
 
-
-    let data = getRowData(tr);
-    let id = tr.children[0].children[0].value;
-    let fetchOptions = {
-        method: "PUT",
-        mode: "cors",
-        cache: "no-cache",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    };
-
-    fetch(`http://localhost:3000/users/${id}`, fetchOptions).then(
-        resp => resp.json(),
-        err => console.error(err)
-    ).then(
-        data => startGetUsers()
-    );
-
     const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
-    const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
+    const isVAlidAddress = /[\w',-\\/.\s]/;
 
     const nameMatch = name.match(isValidName);
     const emailMatch = email.match(isValidEmail);
     const addressMatch = address.match(isVAlidAddress);
 
     if (nameMatch && emailMatch && addressMatch) {
+        okModal();
+        let data = getRowData(tr);
+        let id = tr.children[0].children[0].value;
+        let fetchOptions = {
+            method: "PUT",
+            mode: "cors",
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        };
 
-        alert("ok")
+        fetch(`http://localhost:3000/users/${id}`, fetchOptions).then(
+            resp => resp.json(),
+            err => console.error(err)
+        ).then(
+            data => startGetUsers()
+        );
+
     } else if (!nameMatch && emailMatch && addressMatch) {
+       nameModal();
+        undoUser();
+        startGetUsers();
 
-        alert("Name is not valid!");
     } else if (nameMatch && !emailMatch && addressMatch) {
+        emailModal();
+        undoUser();
+        startGetUsers();
 
-        alert("Email is not valid!");
     } else if (nameMatch && emailMatch && !addressMatch) {
-
-        alert("Address is not valid!");
+        addressModal();
+        undoUser();
+        startGetUsers();
     } else {
+        validModal();
+        undoUser();
+        startGetUsers();
+    } 
 
-        alert("Please add valid data!");
-    }
+        };
 
 
-
-};
 
 //Undo user
 
@@ -208,8 +220,6 @@ function undoUser(btn) {
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
     startGetUsers();
-
-
 }
 
 
@@ -269,24 +279,9 @@ function createUser(btn) {
     let tr = btn.parentElement.parentElement;
     let data = getRowData(tr);
     delete data.id;
-    let fetchOptions = {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    };
-
-    fetch(`http://localhost:3000/users`, fetchOptions).then(
-        resp => resp.json(),
-        err => console.error(err)
-    ).then(
-        data => startGetUsers()
-    );
 
 
+    
     Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
@@ -294,26 +289,39 @@ function createUser(btn) {
 
     const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
-    const isVAlidAddress = /^[a-zA-Z0-9\s,'-]*$/;
+    const isVAlidAddress = /[\w',-\\/.\s]/;
 
     const nameMatch = name.match(isValidName);
     const emailMatch = email.match(isValidEmail);
     const addressMatch = address.match(isVAlidAddress);
 
     if (nameMatch && emailMatch && addressMatch) {
-        alert("ok")
+        newUserModal();
+        let fetchOptions = {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+
+        fetch(`http://localhost:3000/users`, fetchOptions).then(
+            resp => resp.json(),
+            err => console.error(err)
+        ).then(
+            data => startGetUsers()
+        );
+        
     } else if (!nameMatch && emailMatch && addressMatch) {
-
-        alert("Name is not valid!");
+        nameModal();
     } else if (nameMatch && !emailMatch && addressMatch) {
-
-        alert("Email is not valid!");
+        emailModal();
     } else if (nameMatch && emailMatch && !addressMatch) {
-
-        alert("Address is not valid!");
+        addressModal();
     } else {
-
-        alert("Please add valid data!");
+        validModal();
     }
 }
 
@@ -326,26 +334,72 @@ function getRowData(tr) {
     return data;
 }
 
-// Modals
 
-const delModal = () => {
+const modalId = document.getElementById("modalText");
 
+// Modals //
+
+// - Modal main
+
+const modals = () => {
     modal.style.display = "block";
-    setInterval(function () { modal.style.display = "none" }, 5000);
-}
+    setInterval(function () {
+        modal.style.display = "none";
+    }, 5000);
+};
 span.onclick = function () {
     modal.style.display = "none";
+    window.location.reload();
 };
 btnok.onclick = function () {
     modal.style.display = "none";
+    window.location.reload();
 };
 
 window.onclick = function (event) {
     if (event.target == modal) {
         (modal.style.display = "none");
+        window.location.reload();
     }
+};
+
+
+const delModal = () => {
+    modalId.innerHTML = `<p id="modalText" class="Modal__text green"> User deleted!</p>`;
+    modals();
 }
 
+const validModal = () => {
+    modalId.innerHTML = `<p id="modalText" class="Modal__text red">Please add valid data!</p>`;
+    modals();
+};
 
+const nameModal = () => {
+    modalId.innerHTML = `<p id="modalText" class="Modal__text red">Please add valid username!</p>`;
+    modals();
+};
 
+const emailModal = () => {
+    modalId.innerHTML = `<p id="modalText" class="Modal__text red">Please add valid email address!</p>`;
+    modals();
+};
 
+const addressModal = () => {
+    modalId.innerHTML = `<p id="modalText" class="Modal__text red">Please add valid address</p>`;
+    modals();
+};
+
+const okModal = () => {
+    modalId.innerHTML = `<p id="modalText" class="Modal__text green">User saved successfully!</p>`;
+    modals();
+};
+
+const newUserModal = () => {
+    modalId.innerHTML = `<p id="modalText green" class="Modal__text green">New user added successfully!</p>`;
+    modals();
+};
+
+const alertModal = () => {
+    modalId.innerHTML = `<p id="modalText green" class="Modal__text green">Please finish the editing first!</p>`;
+    modals();
+};

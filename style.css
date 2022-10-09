@@ -5,7 +5,7 @@
 }
 
 body {
-    background: linear-gradient(90deg, rgb(2, 2, 2) 0%, rgb(126, 126, 126) 35%, rgb(254, 255, 255) 100%);
+    background: linear-gradient(90deg, rgb(2, 2, 2) 0%, rgb(126, 126, 126) 40%, rgb(126, 126, 126) 60%,rgb(2, 2, 2)100%);
     color: #ffffff
 }
 
@@ -120,7 +120,7 @@ input {
   margin: auto;
   border: none;
   width: 150px;
-  background-color: rgb(32, 163, 43);
+  background-color: rgb(42, 177, 54);
   color: #fefefe;
   padding: 14px 14px;
   margin-left:30px;
@@ -128,5 +128,14 @@ input {
   font-weight: 300;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.green {
+  font-family: 'Roboto';
+  color: green;
+}
+.red {
+  font-family: 'Roboto';
+  color: red;
 }
 
