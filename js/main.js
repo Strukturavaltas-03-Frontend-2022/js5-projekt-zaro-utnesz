@@ -136,6 +136,9 @@ function editUser(btn) {
     btn.parentElement.children[1].style.display = "none";
     btn.parentElement.children[2].style.display = "inline-block";
     btn.parentElement.children[3].style.display = "inline-block";
+
+    const editButton = document.querySelectorAll(".btn-edit");
+    editButton.innerHTML = '';
 };
 
 //Save user
