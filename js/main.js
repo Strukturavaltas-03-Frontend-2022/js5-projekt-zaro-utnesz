@@ -5,6 +5,12 @@ const btn = document.getElementById("mbutton");
 const span = document.getElementsByClassName("close")[0];
 const btnok = document.getElementsByClassName("button-ok")[0];
 
+let editBtn;
+let delBtn;
+let btnGroup;
+let banBtn;
+let ban2Btn;
+
 let keys = ["id", "name", "email", "address"];
 
 // GET method
@@ -63,6 +69,12 @@ function fillDataTable(data, tableID) {
         tr.appendChild(btnGroup);
         tBody.appendChild(tr);
     }
+    editBtn = document.querySelectorAll(".btn-edit");
+    delBtn = document.querySelectorAll(".btn-del");
+    btnGroup = document.querySelectorAll(".btn-group")
+    banBtn = document.querySelectorAll(".btn-ban")
+    ban2Btn = document.querySelectorAll(".btn-ban2")
+    
 }
 
 
@@ -74,17 +86,19 @@ function createAnyElement(name, attributes) {
     return element;
 }
 
+
+
 function createBtnGroup() {
 
     let group = createAnyElement("div", {
         class: "btn-group"
     });
 
-    let infoBtn = createAnyElement("button", {
+    let editBtn = createAnyElement("button", {
         class: "btn-edit",
-        onclick: "editUser(this)"
+        onclick: "editUser(this)",
     });
-    infoBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
+    editBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
 
     let deleteBtn = createAnyElement("button", {
         class: "btn-del",
@@ -98,7 +112,7 @@ function createBtnGroup() {
         style: "display: none"
     });
     saveBtn.innerHTML = `<i class="fa fa-save" aria-hidden="true"></i>`;
-    
+
     let undoBtn = createAnyElement("button", {
         class: "btn-undo",
         onclick: "undoUser(this)",
@@ -106,10 +120,26 @@ function createBtnGroup() {
     });
     undoBtn.innerHTML = `<i class="fa fa-undo" aria-hidden="true"></i>`;
 
-    group.appendChild(infoBtn)
+    let banBtn = createAnyElement("button", {
+        class: "btn-ban",
+        onclick: "alertModal()",
+        style: "display: none"
+    });
+    banBtn.innerHTML = `<i class="fa fa-pencil" aria-hidden="true"></i>`;
+
+    let ban2Btn = createAnyElement("button", {
+        class: "btn-ban2",
+        onclick: "alertModal()",
+        style: "display: none"
+    });
+    ban2Btn.innerHTML = `<i class="fa fa-trash-o" aria-hidden="true"></i>`;
+
+    group.appendChild(editBtn)
     group.appendChild(deleteBtn)
     group.appendChild(saveBtn)
     group.appendChild(undoBtn)
+    group.appendChild(banBtn)
+    group.appendChild(ban2Btn)
 
 
     let td = createAnyElement("td");
@@ -118,14 +148,12 @@ function createBtnGroup() {
 };
 
 
-
-
 //Button functions
 
-//Edit user
-const saveButton = document.getElementsByClassName("btn-edit");
 
-function editUser(btn) {
+//Edit user
+
+const editUser = (btn) => {
     let tr = btn.parentElement.parentElement.parentElement;
     Array.from(tr.children).forEach(td => td.children[0].readOnly = false)
     const name = tr.children[1].children[0].value
@@ -136,10 +164,15 @@ function editUser(btn) {
     btn.parentElement.children[1].style.display = "none";
     btn.parentElement.children[2].style.display = "inline-block";
     btn.parentElement.children[3].style.display = "inline-block";
+    btn.parentElement.children[4].style.display = "none";
+    btn.parentElement.children[5].style.display = "none";
 
-    const editButton = document.querySelectorAll(".btn-edit");
-    editButton.innerHTML = '';
-};
+    editBtn.forEach(btn => (btn.parentElement.children[0].style.display = "none"));
+    delBtn.forEach(btn => (btn.parentElement.children[1].style.display = "none"));
+    banBtn.forEach(btn => (btn.parentElement.children[4].style.display = "inline-block"));
+    ban2Btn.forEach(btn => (btn.parentElement.children[5].style.display = "inline-block"));
+}   
+
 
 //Save user
 
@@ -150,14 +183,14 @@ function saveUser(btn) {
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
     const address = tr.children[3].children[0].value
-   
+
     btn.style.display = "none";
     btn.parentElement.children[3].style.display = "none";
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
 
     const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+    const isValidName = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
     const isVAlidAddress = /[\w',-\\/.\s]/;
 
     const nameMatch = name.match(isValidName);
@@ -186,26 +219,19 @@ function saveUser(btn) {
         );
 
     } else if (!nameMatch && emailMatch && addressMatch) {
-       nameModal();
+        nameModal();
         undoUser();
-        startGetUsers();
-
     } else if (nameMatch && !emailMatch && addressMatch) {
         emailModal();
         undoUser();
-        startGetUsers();
-
     } else if (nameMatch && emailMatch && !addressMatch) {
         addressModal();
         undoUser();
-        startGetUsers();
     } else {
         validModal();
         undoUser();
-        startGetUsers();
-    } 
-
-        };
+    }
+};
 
 
 
@@ -223,7 +249,10 @@ function undoUser(btn) {
     btn.parentElement.children[0].style.display = "inline-block";
     btn.parentElement.children[1].style.display = "inline-block";
     startGetUsers();
+
+    onclick
 }
+
 
 
 //Delete user
@@ -245,9 +274,7 @@ function delUser(btn) {
             startGetUsers();
         }
     );
-
     delModal();
-
 }
 
 
@@ -284,14 +311,14 @@ function createUser(btn) {
     delete data.id;
 
 
-    
+
     Array.from(tr.children).forEach(td => td.children[0].readOnly = true);
     const name = tr.children[1].children[0].value
     const email = tr.children[2].children[0].value
     const address = tr.children[3].children[0].value
 
     const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    const isValidName = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+    const isValidName = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
     const isVAlidAddress = /[\w',-\\/.\s]/;
 
     const nameMatch = name.match(isValidName);
@@ -316,7 +343,7 @@ function createUser(btn) {
         ).then(
             data => startGetUsers()
         );
-        
+
     } else if (!nameMatch && emailMatch && addressMatch) {
         nameModal();
     } else if (nameMatch && !emailMatch && addressMatch) {
@@ -403,6 +430,6 @@ const newUserModal = () => {
 };
 
 const alertModal = () => {
-    modalId.innerHTML = `<p id="modalText green" class="Modal__text green">Please finish the editing first!</p>`;
+    modalId.innerHTML = `<p id="modalText green" class="Modal__text red">Please finish the editing first!</p>`;
     modals();
 };
